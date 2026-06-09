@@ -17,7 +17,7 @@ public class Id3v1Tag {
     public string? Comentario   { get => comentario; }
     public string? Genero       { get => genero; }
 
-    public void LeerBuffer() {
-        header = "asdadwd";
+    public void LeerBuffer(byte[] MP3_Buffer) {
+
     }
 }
