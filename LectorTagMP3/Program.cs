@@ -17,17 +17,29 @@ FileStream MP3_FILE = new FileStream(MP3_PATH, FileMode.Open);
 
 // Verificar formato MP3
 byte[] Formato = new byte[3];
-MP3_FILE.Read(Formato, 0, 3);
-if (Encoding.ASCII.GetString(Formato) != "ID3") {
+if (Encoding.UTF8.GetString(Formato, 0, MP3_FILE.Read(Formato, 0, 3)) != "ID3") {
     Console.WriteLine("Formato invalido, no es un MP3!");
     MP3_FILE.Close();
     return;
 }
 
-// Leer los ultimos 128 Bytes
-byte[] MP3_Buffer = new byte[128];
-MP3_FILE.Seek(-128, SeekOrigin.End);
-MP3_FILE.Read(MP3_Buffer, 0, 128);
+Id3v1Tag LectorTag = new Id3v1Tag();
+
+// Leer los tags del MP3
+if (!LectorTag.LeerTags(MP3_FILE)) {
+    Console.WriteLine("No se pudo leer los tags del MP3");
+    MP3_FILE.Close();
+    return;
+}
+
+// Datos
+Console.WriteLine($"Header:     {LectorTag.Header}");
+Console.WriteLine($"Titulo:     {LectorTag.Titulo}");
+Console.WriteLine($"Artista:    {LectorTag.Artista}");
+Console.WriteLine($"Album:      {LectorTag.Album}");
+Console.WriteLine($"Anio:       {LectorTag.Anio}");
+Console.WriteLine($"Comentario: {LectorTag.Comentario}");
+Console.WriteLine($"Genero:     {LectorTag.Genero}");
 
 // Cerrar el archivo
 MP3_FILE.Close();
